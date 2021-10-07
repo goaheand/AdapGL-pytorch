@@ -1,0 +1,10 @@
+learning_rate: 0.001
+weight_decay: 0.0001
+optimizer: Adam
+seed: 2021
+scaler: StandardScaler
+
+lr_scheduler:
+  name: CosineAnnealingLR
+  T_max: 15
+  eta_min: 0.00001

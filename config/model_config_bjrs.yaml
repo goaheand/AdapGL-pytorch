@@ -1,0 +1,45 @@
+# 北京地铁数据集
+dataset:
+  data_dir: data/beijing_pt/dataset_rail_station
+  step_num_in: 12
+  step_num_out: 6
+  num_nodes: 140
+  input_size: 2
+  batch_size: 64
+  device: cuda:0
+
+AdapGLA:
+  num_block: 2
+  kernel_size: 5
+  num_cheb_filter: 128
+  num_time_filter: 64
+  conv_type: cheb
+  K: 3
+  init_feature_num: 64
+  adj_mx_path: data/beijing_pt/dataset_rail_station/od.npy,data/beijing_pt/dataset_rail_station/spearman.npy
+
+AdapGLD:
+  K: 3
+  graph_num: 2
+  rnn_hidden_size: 64
+  rnn_layer_num: 1
+  use_gc: True
+  batch_first: True
+  use_curriculum_learning: True
+  cl_decay_steps: 2000
+  activation: tanh
+  adj_mx_path: data/beijing_pt/dataset_rail_station/od.npy,data/beijing_pt/dataset_rail_station/spearman.npy
+  init_feature_num: 64
+
+AdapGLT:
+  K: 3
+  rnn_hidden_size: 64
+  rnn_layer_num: 1
+  batch_first: True
+  conv_type: cheb
+  conv_first: False
+  with_res: False
+  num_block: 2
+  num_cheb_filter: 128
+  init_feature_num: 64
+  adj_mx_path: data/beijing_pt/dataset_rail_station/od.npy,data/beijing_pt/dataset_rail_station/spearman.npy

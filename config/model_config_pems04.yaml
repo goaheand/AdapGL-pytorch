@@ -1,0 +1,44 @@
+# PeMS04数据集
+dataset:
+  data_dir: data/pems04
+  step_num_in: 12
+  step_num_out: 12
+  num_nodes: 307
+  input_size: 3
+  batch_size: 64
+  device: cuda:0
+
+AdapGLA:
+  num_block: 2
+  kernel_size: 5
+  num_cheb_filter: 128
+  num_time_filter: 128
+  conv_type: cheb
+  K: 3
+  init_feature_num: 64
+  adj_mx_path: data/pems04/adj_mx_distance.npy,data/pems04/adj_mx_corr.npy
+
+AdapGLD:
+  K: 3
+  graph_num: 2
+  rnn_hidden_size: 128
+  rnn_layer_num: 1
+  use_gc: True
+  batch_first: True
+  use_curriculum_learning: True
+  cl_decay_steps: 2000
+  activation: tanh
+  adj_mx_path: data/pems04/adj_mx_distance.npy,data/pems04/adj_mx_corr.npy
+  init_feature_num: 64
+
+AdapGLT:
+  K: 3
+  rnn_hidden_size: 128
+  rnn_layer_num: 1
+  batch_first: True
+  conv_type: cheb
+  with_res: False
+  num_block: 2
+  num_cheb_filter: 128
+  init_feature_num: 64
+  adj_mx_path: data/pems04/adj_mx_distance.npy,data/pems04/adj_mx_corr.npy
