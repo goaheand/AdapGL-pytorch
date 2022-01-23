@@ -136,6 +136,7 @@ dmypy.json
 *.h5
 *.pkl
 *.npy
+results
 raw_data
 data
 model_states

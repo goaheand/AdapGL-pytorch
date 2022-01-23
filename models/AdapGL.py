@@ -11,7 +11,7 @@ class GraphConv(torch.nn.Module):
     Args:
         f_in: input size.
         num_cheb_filter: output size.
-        conv_type: 
+        conv_type:
             gcn: :math:`AHW`,
             cheb: :math:``T_k(A)HW`.
         activation: default relu.
