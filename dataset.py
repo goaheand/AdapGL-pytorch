@@ -10,14 +10,14 @@ class TPDataset(Dataset):
         data_npz = np.load(data_path)
         self.data = {k: data_npz[k] for k in self.keys}
 
-    def transform(self, scaler):
+    def fit(self, scaler):
         key = self.keys[0]
         self.data[key] = scaler.transform(self.data[key])
 
         key = self.keys[-1]
         self.data[key] = scaler.transform(self.data[key], axis=0)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int):
         ret = [self.data[key][index] for key in self.keys]
         return ret
 

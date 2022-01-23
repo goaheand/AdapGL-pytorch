@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.stats import pearsonr
 
 
 def get_mae(y_pred, y_true):

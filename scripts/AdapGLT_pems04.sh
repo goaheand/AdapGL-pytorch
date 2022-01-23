@@ -1,5 +1,5 @@
 python ./main.py \
-    --model_config_path ./config/model_config_pems04.yaml \
+    --model_config_path ./config/train_pems04.yaml \
     --train_config_path ./config/train_config.yaml \
     --model_name AdapGLT \
     --num_epoch 5 \

@@ -10,27 +10,13 @@ from dataset import TPDataset
 from torch.utils.data import DataLoader
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--model_config_path', type=str, default='./config/model_config_pems04.yaml',
-                    help='Config path of models')
-parser.add_argument('--train_config_path', type=str, default='./config/train_config.yaml',
-                    help='Config path of Trainer')
-parser.add_argument('--model_name', type=str, default='AdapGLT', help='Model name to train')
-parser.add_argument('--num_epoch', type=int, default=5, help='Training times per epoch')
-parser.add_argument('--num_iter', type=int, default=100, help='Maximum value for iteration')
-parser.add_argument('--model_save_path', type=str, default='./model_states/AdapGLT_pems04.pkl',
-                    help='Model save path')
-parser.add_argument('--max_graph_num', type=int, default=3, help='Volume of adjacency matrix set')
-args = parser.parse_args()
-
-
 def load_config(data_path):
     with open(data_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
     return config
 
 
-def main():
+def main(args):
     model_config = load_config(args.model_config_path)
     train_config = load_config(args.train_config_path)
     torch.manual_seed(train_config['seed'])
@@ -48,7 +34,7 @@ def main():
         dataset = TPDataset(os.path.join(data_config['data_dir'], data_name))
         if data_name == 'train.npz':
             data_scaler.fit(dataset.data['x'])
-        dataset.transform(data_scaler)
+        dataset.fit(data_scaler)
         data_loader = DataLoader(dataset, batch_size=data_config['batch_size'])
         data_loaders.append(data_loader)
 
@@ -61,10 +47,7 @@ def main():
     if Model is None:
         raise ValueError('Model {} is not right!'.format(net_name))
     net_pred = Model(**net_config).to(device)
-    net_graph = AdapGL.GraphLearn(
-        net_config['num_nodes'],
-        net_config['init_feature_num'],
-    ).to(device)
+    net_graph = AdapGL.GraphLearn(net_config['num_nodes'], net_config['init_feature_num']).to(device)
 
     Optimizer = getattr(sys.modules['torch.optim'], train_config['optimizer'])
     optimizer_pred = Optimizer(
@@ -78,8 +61,7 @@ def main():
     if sc is None:
         scheduler_pred, scheduler_graph = None, None
     else:
-        sc_name = sc.pop('name')
-        Scheduler = getattr(sys.modules['torch.optim.lr_scheduler'], sc_name)
+        Scheduler = getattr(sys.modules['torch.optim.lr_scheduler'], sc.pop('name'))
         scheduler_pred = Scheduler(optimizer_pred, **sc)
         scheduler_graph = None
 
@@ -89,7 +71,7 @@ def main():
         scheduler_pred, scheduler_graph, args.num_epoch, args.num_iter,
         args.max_graph_num, data_scaler, args.model_save_path
     )
-    # net_trainer = trainer.AdapGLE2ETrainer(
+    # net_trainer = trainers.AdapGLE2ETrainer(
     #     net_config['adj_mx_path'], net_pred, net_graph, optimizer_pred, optimizer_graph,
     #     scheduler_pred, scheduler_graph, args.num_epoch, args.num_iter, data_scaler, args.model_save_path
     # )
@@ -99,4 +81,17 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model_config_path', type=str, default='./config/train_pems04_speed.yaml',
+                        help='Config path of models')
+    parser.add_argument('--train_config_path', type=str, default='./config/train_config.yaml',
+                        help='Config path of Trainer')
+    parser.add_argument('--model_name', type=str, default='AdapGLA', help='Model name to train')
+    parser.add_argument('--num_epoch', type=int, default=5, help='Training times per epoch')
+    parser.add_argument('--num_iter', type=int, default=20, help='Maximum value for iteration')
+    parser.add_argument('--model_save_path', type=str, default='./model_states/AdapGLA_pems08_speed.pkl',
+                        help='Model save path')
+    parser.add_argument('--max_graph_num', type=int, default=3, help='Volume of adjacency matrix set')
+    args = parser.parse_args()
+
+    main(args)

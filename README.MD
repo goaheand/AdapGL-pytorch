@@ -4,7 +4,7 @@ This is a Pytorch implemention of AdapGL.
 
 ## Requirements
 
-The model is implemented using python3 with dependencies below specified in requirements.txt.
+The model is implemented using python3 with dependencies specified in requirements.txt.
 
 ## Traffic datasets
 
